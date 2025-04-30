@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(BlankmanF)
 ```
 
 ## Overview
@@ -19,71 +20,7 @@ The `BlankmanF` package provides tools for conducting and visualizing the Friedm
 
 ## Function: `run_friedman_test()`
 
-```{r}
-run_friedman_test <- function(data, subject_col, treatment_col, response_col) {
-  formula <- as.formula(paste(response_col, "~", treatment_col, "|", subject_col))
-  result <- stats::friedman.test(formula, data = data)
-
-  summary_table <- data %>%
-    dplyr::group_by(.data[[treatment_col]]) %>%
-    dplyr::summarise(Mean_Rank = mean(rank(-.data[[response_col]])), .groups = "drop")
-
-  list(
-    statistic = result$statistic,
-    p_value = result$p.value,
-    df = result$parameter,
-    method = result$method,
-    summary = summary_table
-  )
-}
-```
-
----
-
-## Function: `plot_friedman_ranks()`
-
-```{r}
-plot_friedman_ranks <- function(data, subject_col, treatment_col, response_col) {
-  ranked_data <- data %>%
-    dplyr::group_by(.data[[subject_col]]) %>%
-    dplyr::mutate(Rank = rank(-.data[[response_col]])) %>%
-    dplyr::ungroup()
-
-  summary_ranks <- ranked_data %>%
-    dplyr::group_by(.data[[treatment_col]]) %>%
-    dplyr::summarise(Mean_Rank = mean(Rank), .groups = "drop")
-
-  ggplot2::ggplot(summary_ranks, ggplot2::aes(x = .data[[treatment_col]], y = Mean_Rank)) +
-    ggplot2::geom_col() +
-    ggplot2::labs(title = "Mean Ranks by Treatment", x = "Treatment", y = "Mean Rank") +
-    ggplot2::theme_minimal()
-}
-```
-
----
-
-## Function: `get_friedman_summary()`
-
-```{r}
-get_friedman_summary <- function(data, subject_col, treatment_col, response_col) {
-  ranked_data <- data %>%
-    dplyr::group_by(.data[[subject_col]]) %>%
-    dplyr::mutate(Rank = rank(-.data[[response_col]])) %>%
-    dplyr::ungroup()
-
-  ranked_data %>%
-    dplyr::group_by(.data[[treatment_col]]) %>%
-    dplyr::summarise(
-      Mean_Rank = mean(Rank),
-      SD_Rank = sd(Rank),
-      .groups = "drop"
-    )
-}
-```
-
----
-
-## Example Data and Test
+This function performs the Friedman test and returns a custom S3 object of class `blankman_result`.
 
 ```{r}
 example_data <- data.frame(
@@ -92,7 +29,39 @@ example_data <- data.frame(
   Score = c(85, 88, 90, 78, 80, 82, 91, 93, 92, 87, 89, 90, 70, 72, 74, 76, 77, 79)
 )
 
-run_friedman_test(example_data, "Subject", "Treatment", "Score")
+result <- run_friedman_test(example_data, "Subject", "Treatment", "Score")
+```
+
+By default, printing the result uses the S3 method:
+
+```{r}
+result  # uses print.blankman_result()
+```
+
+---
+
+## Function: `plot_friedman_ranks()`
+
+This function visualizes mean ranks of treatments using a bar plot.
+
+```{r}
 plot_friedman_ranks(example_data, "Subject", "Treatment", "Score")
+```
+
+---
+
+## Function: `get_friedman_summary()`
+
+This function returns a tidy summary of mean and standard deviation of ranks by treatment.
+
+```{r}
 get_friedman_summary(example_data, "Subject", "Treatment", "Score")
 ```
+
+---
+
+## Notes
+
+- The package expects tidy, long-format data.
+- `run_friedman_test()` returns an S3 object with a custom print method for cleaner output.
+- Designed for flexibility and extension (e.g., post-hoc tests in future versions).
