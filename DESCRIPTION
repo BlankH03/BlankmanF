@@ -18,4 +18,5 @@ License: CC0
 LazyData: true
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-
+URL: https://github.com/BlankH03/BlankmanF
+BugReports: https://github.com/BlankH03/BlankmanF/issues
