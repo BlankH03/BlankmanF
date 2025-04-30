@@ -16,7 +16,7 @@ run_friedman_test(data, subject_col, treatment_col, response_col)
 \item{response_col}{Column name for the response variable.}
 }
 \value{
-A list with the test statistic, p-value, degrees of freedom, method, and summary table.
+An object of class 'blankman_result' with test results and summary.
 }
 \description{
 Conducts the Friedman test for repeated measures data using a tidy data frame.

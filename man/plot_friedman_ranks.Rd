@@ -16,7 +16,7 @@ plot_friedman_ranks(data, subject_col, treatment_col, response_col)
 \item{response_col}{Column name for the response variable.}
 }
 \value{
-A ggplot2 object showing the mean ranks.
+A ggplot2 object showing the mean ranks
 }
 \description{
 Creates a bar plot of mean treatment ranks from the Friedman test.
