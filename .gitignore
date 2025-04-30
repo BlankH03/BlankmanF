@@ -2,7 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rproj.user/
 .Rdata
+.Rbuildignore
 .httr-oauth
 .DS_Store
 .quarto
+.tar.gz
