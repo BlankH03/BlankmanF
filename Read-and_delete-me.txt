@@ -1,0 +1,14 @@
+This package, BlankmanF, was developed by Holden Blank for a statistics project.
+
+Package structure:
+- R/: contains the main R scripts for the package's functions.
+- man/: placeholder for .Rd documentation files.
+- vignettes/: includes a full R Markdown file explaining each function with examples.
+- DESCRIPTION: metadata for the package.
+- NAMESPACE: declares which functions are exported.
+- Read-and_delete-me.txt: this file.
+
+To build the package:
+1. Open the project in RStudio.
+2. Use devtools::document() to build documentation.
+3. Use devtools::install() to install locally.

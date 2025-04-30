@@ -1,0 +1,21 @@
+Package: BlankmanF
+Title: Statistical Tools for Friedman Test Analysis and Ranking Visualization
+Version: 0.0.0.9000
+Authors@R: person("Holden", "Blank", email = "blankh@usf.edu", role = c("aut", "cre"))
+Description: Provides tools for conducting the Friedman test, a non-parametric 
+    statistical test used for detecting differences in treatments across multiple 
+    test attempts. The package includes functions to run the test, process and 
+    visualize the rankings, and generate interpretable outputs for further analysis. 
+    Designed for researchers and data analysts working with repeated measures or 
+    block designs in experimental settings.
+Depends: R (>= 3.1.2)
+Imports: 
+    stats,
+    ggplot2,
+    dplyr,
+    tidyr
+License: CC0
+LazyData: true
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+
