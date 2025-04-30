@@ -7,7 +7,7 @@
 #' @param treatment_col Column name for the treatment groups.
 #' @param response_col Column name for the response variable.
 #'
-#' @return A list with the test statistic, p-value, degrees of freedom, method, and summary table.
+#' @return An object of class 'blankman_result' with test results and summary.
 #' @export
 run_friedman_test <- function(data, subject_col, treatment_col, response_col) {
   formula <- as.formula(paste(response_col, "~", treatment_col, "|", subject_col))
@@ -17,13 +17,15 @@ run_friedman_test <- function(data, subject_col, treatment_col, response_col) {
     dplyr::group_by(.data[[treatment_col]]) %>%
     dplyr::summarise(Mean_Rank = mean(rank(-.data[[response_col]])), .groups = "drop")
 
-  list(
+  result_obj <- list(
     statistic = result$statistic,
     p_value = result$p.value,
     df = result$parameter,
     method = result$method,
     summary = summary_table
   )
+  class(result_obj) <- "blankman_result"
+  return(result_obj)
 }
 
 #' Plot Mean Ranks from Friedman Test
@@ -35,7 +37,7 @@ run_friedman_test <- function(data, subject_col, treatment_col, response_col) {
 #' @param treatment_col Column name for treatment groups.
 #' @param response_col Column name for the response variable.
 #'
-#' @return A ggplot2 object showing the mean ranks.
+#' @return A ggplot2 object showing the mean ranks
 #' @export
 plot_friedman_ranks <- function(data, subject_col, treatment_col, response_col) {
   ranked_data <- data %>%
@@ -77,4 +79,30 @@ get_friedman_summary <- function(data, subject_col, treatment_col, response_col)
       SD_Rank = sd(Rank),
       .groups = "drop"
     )
+}
+
+#' Print Method for BlankmanF Result
+#'
+#' Nicely prints the results of a blankman_result object.
+#'
+#' @param x An object of class 'blankman_result'.
+#' @param ... Additional arguments (unused).
+#' @export
+print.blankman_result <- function(x, ...) {
+  cat("Friedman Test Result (BlankmanF)
+")
+  cat("--------------------------------
+")
+  cat("Method: ", x$method, "
+")
+  cat("Chi-squared Statistic:", x$statistic, "
+")
+  cat("Degrees of Freedom:", x$df, "
+")
+  cat("P-value:", x$p_value, "
+
+")
+  cat("Treatment Rank Summary:
+")
+  print(x$summary)
 }
